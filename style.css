@@ -411,8 +411,40 @@ h1 {
   100% { transform: scale(1); }
 }
 
-/* Active cell inner glow dot */
-.cell.active::before {
+/* Drum section separator */
+.grid-separator {
+  height: 2px;
+  margin: 6px 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 140, 105, 0.4), rgba(255, 140, 105, 0.6), rgba(255, 140, 105, 0.4), transparent);
+  border-radius: 1px;
+}
+
+/* Drum cells */
+.cell.drum {
+  border-radius: 6px;
+  border-style: dashed;
+}
+
+.cell.drum.active {
+  border-style: solid;
+}
+
+.cell.drum.active::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 2px;
+  background: white;
+  box-shadow: 0 0 6px white, 0 0 12px var(--note-color);
+  z-index: 2;
+}
+
+/* Active cell inner glow dot (melody notes only) */
+.cell:not(.drum).active::before {
   content: '';
   position: absolute;
   top: 50%;

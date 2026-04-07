@@ -10,12 +10,22 @@ test.describe('Anto Melody Maker', () => {
     await expect(page.locator('h1')).toHaveText('Anto Melody Maker');
   });
 
-  test('grid renders with 8 rows and 16 columns (128 cells total)', async ({ page }) => {
+  test('grid renders with 12 rows (8 melody + 4 drums) and 16 columns (192 cells total)', async ({ page }) => {
     const rows = page.locator('.grid-row');
-    await expect(rows).toHaveCount(8);
+    await expect(rows).toHaveCount(12);
 
     const cells = page.locator('.cell');
-    await expect(cells).toHaveCount(128);
+    await expect(cells).toHaveCount(192);
+  });
+
+  test('last 4 rows are drum rows with drum class', async ({ page }) => {
+    const drumCells = page.locator('.cell.drum');
+    await expect(drumCells).toHaveCount(64); // 4 rows x 16 cols
+  });
+
+  test('separator exists between melody and drum sections', async ({ page }) => {
+    const separator = page.locator('.grid-separator');
+    await expect(separator).toHaveCount(1);
   });
 
   test('cells toggle on click (active/inactive)', async ({ page }) => {

@@ -75,4 +75,107 @@ notes.forEach(note => {
   note.play = () => playNote(note.frequency, note.color);
 });
 
-export { notes, getAudioContext };
+// --- Drum synthesis (same as Anto Drum Box) ---
+
+function playKick() {
+  const ctx = getAudioContext();
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.frequency.setValueAtTime(160, ctx.currentTime);
+  osc.frequency.exponentialRampToValueAtTime(40, ctx.currentTime + 0.15);
+  gain.gain.setValueAtTime(1, ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+  osc.start(ctx.currentTime);
+  osc.stop(ctx.currentTime + 0.3);
+}
+
+function playSnare() {
+  const ctx = getAudioContext();
+  const duration = 0.15;
+  const bufferSize = ctx.sampleRate * duration;
+  const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+  const noise = ctx.createBufferSource();
+  noise.buffer = buffer;
+  const noiseFilter = ctx.createBiquadFilter();
+  noiseFilter.type = 'highpass';
+  noiseFilter.frequency.value = 1000;
+  const noiseGain = ctx.createGain();
+  noiseGain.gain.setValueAtTime(0.8, ctx.currentTime);
+  noiseGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+  noise.connect(noiseFilter);
+  noiseFilter.connect(noiseGain);
+  noiseGain.connect(ctx.destination);
+  noise.start(ctx.currentTime);
+  noise.stop(ctx.currentTime + duration);
+  const osc = ctx.createOscillator();
+  const oscGain = ctx.createGain();
+  osc.type = 'triangle';
+  osc.frequency.setValueAtTime(200, ctx.currentTime);
+  oscGain.gain.setValueAtTime(0.5, ctx.currentTime);
+  oscGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
+  osc.connect(oscGain);
+  oscGain.connect(ctx.destination);
+  osc.start(ctx.currentTime);
+  osc.stop(ctx.currentTime + 0.08);
+}
+
+function playHihat() {
+  const ctx = getAudioContext();
+  const duration = 0.08;
+  const bufferSize = ctx.sampleRate * duration;
+  const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+  const noise = ctx.createBufferSource();
+  noise.buffer = buffer;
+  const filter = ctx.createBiquadFilter();
+  filter.type = 'highpass';
+  filter.frequency.value = 7000;
+  const gain = ctx.createGain();
+  gain.gain.setValueAtTime(0.4, ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+  noise.connect(filter);
+  filter.connect(gain);
+  gain.connect(ctx.destination);
+  noise.start(ctx.currentTime);
+  noise.stop(ctx.currentTime + duration);
+}
+
+function playClap() {
+  const ctx = getAudioContext();
+  const duration = 0.15;
+  const bufferSize = ctx.sampleRate * duration;
+  const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+  const noise = ctx.createBufferSource();
+  noise.buffer = buffer;
+  const filter = ctx.createBiquadFilter();
+  filter.type = 'bandpass';
+  filter.frequency.value = 2000;
+  filter.Q.value = 2;
+  const gain = ctx.createGain();
+  gain.gain.setValueAtTime(0, ctx.currentTime);
+  gain.gain.setValueAtTime(0.8, ctx.currentTime + 0.005);
+  gain.gain.setValueAtTime(0.2, ctx.currentTime + 0.01);
+  gain.gain.setValueAtTime(0.7, ctx.currentTime + 0.02);
+  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+  noise.connect(filter);
+  filter.connect(gain);
+  gain.connect(ctx.destination);
+  noise.start(ctx.currentTime);
+  noise.stop(ctx.currentTime + duration);
+}
+
+const drums = [
+  { name: 'Kick',   play: playKick,  emoji: '🥁', color: '#ff8c69', isDrum: true },
+  { name: 'Snare',  play: playSnare, emoji: '🪇', color: '#ffa07a', isDrum: true },
+  { name: 'Hi-hat', play: playHihat, emoji: '🔔', color: '#f0a0c0', isDrum: true },
+  { name: 'Clap',   play: playClap,  emoji: '👏', color: '#e8a0d0', isDrum: true },
+];
+
+export { notes, drums, getAudioContext };

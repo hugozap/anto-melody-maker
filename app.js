@@ -1,8 +1,9 @@
-import { notes, getAudioContext } from './sounds.js';
+import { notes, drums, getAudioContext } from './sounds.js';
 import { VisualDisplay } from './visual.js';
 
 const STEPS = 16;
-const ROWS = notes.length; // 8
+const allRows = [...notes, ...drums];
+const ROWS = allRows.length; // 12
 const STORAGE_KEY = 'anto-melody-maker-saves';
 
 // State
@@ -34,14 +35,24 @@ function buildGrid() {
   gridEl.innerHTML = '';
 
   for (let row = 0; row < ROWS; row++) {
+    // Add separator before drums section
+    if (row === notes.length) {
+      const sep = document.createElement('div');
+      sep.className = 'grid-separator';
+      gridEl.appendChild(sep);
+    }
+
     const rowEl = document.createElement('div');
     rowEl.className = 'grid-row';
 
-    // Note label
+    const item = allRows[row];
+    const isDrum = item.isDrum;
+
+    // Label
     const label = document.createElement('div');
     label.className = 'note-label';
-    label.innerHTML = `<span class="emoji">${notes[row].emoji}</span><span class="name">${notes[row].name}</span>`;
-    label.style.setProperty('--note-color', notes[row].color);
+    label.innerHTML = `<span class="emoji">${item.emoji}</span><span class="name">${item.name}</span>`;
+    label.style.setProperty('--note-color', item.color);
     rowEl.appendChild(label);
 
     // Cells
@@ -50,10 +61,10 @@ function buildGrid() {
 
     for (let col = 0; col < STEPS; col++) {
       const cell = document.createElement('button');
-      cell.className = 'cell';
+      cell.className = isDrum ? 'cell drum' : 'cell';
       cell.dataset.row = row;
       cell.dataset.col = col;
-      cell.style.setProperty('--note-color', notes[row].color);
+      cell.style.setProperty('--note-color', item.color);
       cell.addEventListener('click', () => toggleCell(row, col, cell));
       cellsContainer.appendChild(cell);
     }
@@ -130,11 +141,11 @@ function step() {
 
   if (visualDisplay) visualDisplay.triggerStep();
 
-  // Play active notes
+  // Play active notes and drums
   for (let row = 0; row < ROWS; row++) {
     if (grid[row][currentStep]) {
-      notes[row].play();
-      if (visualDisplay) visualDisplay.trigger(row, notes[row].color);
+      allRows[row].play();
+      if (visualDisplay) visualDisplay.trigger(row, allRows[row].color);
     }
   }
 }
@@ -234,7 +245,7 @@ function renderLoadList() {
 }
 
 function loadState(save) {
-  // Update grid
+  // Update grid (backward compatible: old saves may have fewer rows)
   for (let row = 0; row < ROWS; row++) {
     for (let col = 0; col < STEPS; col++) {
       grid[row][col] = save.grid[row] && save.grid[row][col] ? true : false;
