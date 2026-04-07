@@ -1,0 +1,16 @@
+{
+  "name": "anto-melody-maker",
+  "version": "1.0.0",
+  "description": "A grid-based melody composer for Anto. Click cells to place notes on a 16-step timeline, then press Play to hear your melody.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.59.1",
+    "serve": "^14.2.6"
+  }
+}

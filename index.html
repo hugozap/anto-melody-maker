@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anto Melody Maker</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Anto Melody Maker</h1>
+  <p class="subtitle">Crea tu propia melodia!</p>
+
+  <div class="visual-container">
+    <canvas id="visual-canvas"></canvas>
+  </div>
+
+  <div class="controls">
+    <button id="play-btn" class="btn btn-play">&#9654; Play</button>
+    <button id="clear-btn" class="btn btn-clear">Limpiar</button>
+    <div class="save-load-controls">
+      <button id="save-btn" class="btn btn-clear" title="Guardar">💾</button>
+      <div class="load-wrapper">
+        <button id="load-btn" class="btn btn-clear" title="Cargar">📂</button>
+        <div id="load-dropdown" class="load-dropdown hidden">
+          <div id="load-list" class="load-list"></div>
+          <div class="load-empty">No hay melodías guardadas</div>
+        </div>
+      </div>
+    </div>
+    <div class="bpm-control">
+      <label>BPM</label>
+      <input type="range" id="bpm-slider" min="60" max="200" value="120">
+      <span id="bpm-value" class="bpm-value">120</span>
+    </div>
+  </div>
+
+  <div class="grid-container">
+    <div id="grid"></div>
+  </div>
+
+  <p class="footer">Hecho con amor para Anto</p>
+
+  <!-- Decorative stars -->
+  <div class="deco-star" style="top:10%;left:5%;animation-delay:0s">&#10022;</div>
+  <div class="deco-star" style="top:20%;right:8%;animation-delay:1s;font-size:1.5rem">&#10023;</div>
+  <div class="deco-star" style="bottom:15%;left:10%;animation-delay:2s">&#10022;</div>
+  <div class="deco-star" style="top:50%;right:3%;animation-delay:0.5s;font-size:1rem">&#10023;</div>
+  <div class="deco-star" style="bottom:30%;right:15%;animation-delay:1.5s;font-size:2.5rem">&#10022;</div>
+  <div class="deco-star" style="top:5%;left:50%;animation-delay:2.5s;font-size:1.2rem">&#10023;</div>
+
+  <!-- Floating hearts -->
+  <div class="deco-heart" style="top:15%;left:2%;animation-delay:0s;font-size:1.8rem">&#9829;</div>
+  <div class="deco-heart" style="top:60%;right:4%;animation-delay:3s;font-size:1.2rem">&#9829;</div>
+  <div class="deco-heart" style="bottom:10%;left:15%;animation-delay:6s;font-size:1.5rem">&#9829;</div>
+  <div class="deco-heart" style="top:35%;right:12%;animation-delay:9s;font-size:1rem">&#9829;</div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
