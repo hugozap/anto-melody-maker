@@ -48,11 +48,16 @@ function buildGrid() {
     const item = allRows[row];
     const isDrum = item.isDrum;
 
-    // Label
+    // Label (clickable to preview sound)
     const label = document.createElement('div');
     label.className = 'note-label';
     label.innerHTML = `<span class="emoji">${item.emoji}</span><span class="name">${item.name}</span>`;
     label.style.setProperty('--note-color', item.color);
+    label.style.cursor = 'pointer';
+    label.addEventListener('click', () => {
+      getAudioContext();
+      item.play();
+    });
     rowEl.appendChild(label);
 
     // Cells
